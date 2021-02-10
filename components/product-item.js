@@ -7,16 +7,16 @@ class ProductItem extends HTMLElement {
     super();
 
     // Create a shadow root
-    this.attachShadow({ mode: 'open' });
+    let shadow = this.attachShadow({ mode: 'open' });
 
     // Create nested elements
     const wrapper = document.getElementById('li');
     wrapper.setAttribute('class', 'product');
 
-    const productImg = wrapper.appendChild(document.createElement('img'));
-    productImg.src = this.getAttribute('src');
-    productImg.alt = this.getAttribute('alt');
-    productImg.setAttribute('width', 200);
+    const img = wrapper.appendChild(document.createElement('img'));
+    img.src = this.getAttribute('img');
+    img.alt = this.getAttribute('title');
+    img.setAttribute('width', 200);
 
     const title = wrapper.appendChild(document.createElement('p'));
     title.setAttribute('class', 'title');
@@ -26,19 +26,29 @@ class ProductItem extends HTMLElement {
     price.setAttribute('class', 'price');
     price.textContent = this.getAttribute('price');
 
-    const addToCart = wrapper.appendChild(document.createElement('button'));
-    addToCart.setAttribute('onclick', "alert('Added to Cart!')");
-    addToCart.addEventListener('click', (event) => {
-      let addToCartBtn = event.target;
+    const button = wrapper.appendChild(document.createElement('button'));
+    button.setAttribute('id', this.getAttribute('id'));
+    button.setAttribute('onclick', "alert('Added to Cart!')");
+    button.textContent = 'Add to Cart';
+    button.addEventListener('click', () => {
+      let cartCount = document.getElementById('cart-count');
+      let cartItems = JSON.parse(localStorage.getItem('cart-items'));
+
+      if (this.textContent == 'Add to Cart') {
+        this.textContent = "Remove from Cart";
+        cartCount.textContent = parseInt(cartCount.textContent) + 1;
+        localStorage.setItem
+      }
     })
 
     // Apply external styles to the shadow dom
-    const style = document.createElement('style');
-    style.setAttribute('rel', 'stylesheet');
-    style.setAttribute('href', 'style.css');
+    const linkElem = document.createElement('link');
+    linkElem.setAttribute('rel', 'stylesheet');
+    linkElem.setAttribute('href', './styles/styles.css');
 
     // Attach the created elements to the shadow dom
-    this.shadowRoot.append(style, wrapper);
+    shadow.appendChild(linkElem);
+    shadow.appendChild(wrapper);
   }
 }
 
