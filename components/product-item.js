@@ -1,55 +1,67 @@
 // product-item.js
-
 class ProductItem extends HTMLElement {
-  // TODO
-  constructor() {
-    // Always call super first in constructor
-    super();
+    // TODO
+    constructor() {
+        // Always call super first in constructor
+        super();
 
-    // Create a shadow root
-    let shadow = this.attachShadow({ mode: 'open' });
+        // Create a shadow root
+        this.attachShadow({mode: 'open'});
+    }
+  
+    connectedCallback() {
+        // Create nested elements
+        const wrapper = document.createElement('li');
+        wrapper.setAttribute('class', 'product');
 
-    // Create nested elements
-    const wrapper = document.getElementById('li');
-    wrapper.setAttribute('class', 'product');
+        const img = wrapper.appendChild(document.createElement('img'));
+        img.setAttribute('src', this.getAttribute('image'));
+        img.setAttribute('alt', this.getAttribute('title'));
+        img.setAttribute('width', 200);
+    
+        const title = wrapper.appendChild(document.createElement('p'));
+        title.innerHTML = this.getAttribute('title');
+        title.setAttribute('class', 'title');
 
-    const img = wrapper.appendChild(document.createElement('img'));
-    img.src = this.getAttribute('img');
-    img.alt = this.getAttribute('title');
-    img.setAttribute('width', 200);
+        const price = wrapper.appendChild(document.createElement('p'));
+        price.innerHTML = '$' + this.getAttribute('price');
+        price.setAttribute('class', 'price');
+  
+        const button = wrapper.appendChild(document.createElement('button'));
+        let cartCount = document.getElementById('cart-count');
 
-    const title = wrapper.appendChild(document.createElement('p'));
-    title.setAttribute('class', 'title');
-    title.textContent = this.getAttribute('title');
-
-    const price = wrapper.appendChild(document.createElement('p'));
-    price.setAttribute('class', 'price');
-    price.textContent = this.getAttribute('price');
-
-    const button = wrapper.appendChild(document.createElement('button'));
-    button.setAttribute('id', this.getAttribute('id'));
-    button.setAttribute('onclick', "alert('Added to Cart!')");
-    button.textContent = 'Add to Cart';
-    button.addEventListener('click', () => {
-      let cartCount = document.getElementById('cart-count');
-      let cartItems = JSON.parse(localStorage.getItem('cart-items'));
-
-      if (this.textContent == 'Add to Cart') {
-        this.textContent = "Remove from Cart";
-        cartCount.textContent = parseInt(cartCount.textContent) + 1;
-        localStorage.setItem
-      }
-    })
-
-    // Apply external styles to the shadow dom
-    const linkElem = document.createElement('link');
-    linkElem.setAttribute('rel', 'stylesheet');
-    linkElem.setAttribute('href', './styles/styles.css');
-
-    // Attach the created elements to the shadow dom
-    shadow.appendChild(linkElem);
-    shadow.appendChild(wrapper);
+        if (localStorage.getItem(this.getAttribute('id'))) {
+            button.innerHTML = 'Remove from Cart';
+            cartCount.innerHTML = parseInt(++cartCount.innerHTML);
+        } 
+        else {
+            button.innerHTML = 'Add to Cart';
+        }
+        
+        button.onclick = () => {
+            if (button.innerHTML == 'Add to Cart') {     
+                alert('Added to Cart!');
+                localStorage.setItem(this.getAttribute('id'), 'id');
+                cartCount.innerHTML = parseInt(++cartCount.innerHTML);
+                button.innerHTML = 'Remove from Cart';
+            } 
+            else {
+                alert("Removed from Cart!");
+                localStorage.removeItem(this.getAttribute('id'));
+                cartCount.innerHTML = parseInt(--cartCount.innerHTML);
+                button.innerHTML = 'Add to Cart';
+            }
+        };
+        
+        // Apply external styles to the shadow dom
+        const linkElem = document.createElement('link');
+        linkElem.setAttribute('rel', 'stylesheet');
+        linkElem.setAttribute('href', './styles/styles.css');
+        
+        // Attach the created elements to the shadow dom
+        this.shadowRoot.appendChild(wrapper);
+        this.shadowRoot.appendChild(linkElem);
+        }
   }
-}
-
-customElements.define('product-item', ProductItem);
+  
+  customElements.define("product-item", ProductItem);

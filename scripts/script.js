@@ -1,26 +1,30 @@
 // Script.js
 myStorage = window.localStorage;
+let productList = document.getElementById('product-list')
 
 window.addEventListener('DOMContentLoaded', () => {
-  // TODO
+    // TODO
 
-  fetch('https://fakestoreapi.com/products')
-    .then(response => response.json())
-    .then(data => {
-      if (myStorage.getItem('products') == null) {
-        myStorage.setItem('products', JSON.stringify(data));
-      }
-    });
+    if (myStorage.getItem('products') == null) {
+        fetch('https://fakestoreapi.com/products')
+            .then(response => response.json())
+            .then(data => {
+                myStorage.setItem('products', JSON.stringify(data));
+            });
+    }
+        
+    let products = JSON.parse(myStorage.getItem('products'));
 
-  let products = JSON.parse(myStorage.getItem('products'));
-  let productList = document.getElementById('product-list');
-  let productItem = productList.appendChild(document.createElement('product-item'));
-          
-  for (let i = 0; i < products.length; i++) {
-    productItem.setAttribute('img', products[i].img);
-    productItem.setAttribute('title', products[i].title);
-    productItem.setAttribute('price', products[i].price);
-    productItem.setAttribute('id', products[i].id);
-  }  
+    for (let i = 0; i < products.length; ++i) {
+        let productItem = document.createElement('product-item');
+
+        productItem.setAttribute('id', products[i].id);
+        productItem.setAttribute('image', products[i].image);
+        productItem.setAttribute('title', products[i].title);
+        productItem.setAttribute('price', products[i].price);
+
+        productList.appendChild(productItem);
+    }
+
 });
 
