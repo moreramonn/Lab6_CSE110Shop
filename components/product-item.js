@@ -46,7 +46,7 @@ class ProductItem extends HTMLElement {
                 button.innerHTML = 'Remove from Cart';
             } 
             else {
-                alert("Removed from Cart!");
+                alert('Removed from Cart!');
                 localStorage.removeItem(this.getAttribute('id'));
                 cartCount.innerHTML = parseInt(--cartCount.innerHTML);
                 button.innerHTML = 'Add to Cart';
